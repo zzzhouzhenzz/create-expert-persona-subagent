@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Expert-Persona Sub-agent"
+  short_description: "Delegate work through real-world expert personas"
+  default_prompt: "Use $create-expert-persona-subagent to delegate independent work through the best real-world expert personas and integrate the results."
