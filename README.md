@@ -61,18 +61,21 @@ linus_torvalds_tests
 don_norman_ux_review
 ```
 
+The runtime-visible name must be set through the spawn tool's explicit naming argument, such as `task_name`, `name`, `nickname`, or `label`. Putting the desired name only inside the prompt does not control an auto-generated UI nickname. The coordinating agent verifies the returned visible name and must not accept an unrelated nickname.
+
 ## Task contract
 
 Every delegated task specifies:
 
 1. expert persona and task-relevant principles;
-2. objective, scope, and explicit exclusions;
-3. relevant files, facts, constraints, and prior decisions;
-4. expected deliverable;
-5. required verification;
-6. authorized edits and owned files or state;
-7. escalation conditions;
-8. a structured result status: `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`.
+2. persona-derived runtime name bound through the spawn tool;
+3. objective, scope, and explicit exclusions;
+4. relevant files, facts, constraints, and prior decisions;
+5. expected deliverable;
+6. required verification;
+7. authorized edits and owned files or state;
+8. escalation conditions;
+9. a structured result status: `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`.
 
 Reusable prompt templates are in [`references/task-contracts.md`](references/task-contracts.md).
 

@@ -46,6 +46,18 @@ For non-coding work, select the best-fit real-world expert dynamically. If a tas
 
 Use the persona to set professional principles and quality standards. Do not invent biographical claims, personal opinions, or theatrical imitation.
 
+### Bind the persona to the runtime-visible name
+
+The prompt persona and the runtime nickname are separate fields. Never assume that writing `Task name: ...` inside the prompt controls the displayed agent name.
+
+Before spawning:
+
+1. Inspect the spawn interface for an explicit naming field such as `task_name`, `name`, `nickname`, or `label`.
+2. Set that field in the tool call to the persona-derived machine-safe name. Do not put the name only in the message.
+3. After spawning, inspect the returned name, nickname, label, or canonical task path and verify that it matches the requested persona-derived name.
+4. If it does not match and the runtime supports renaming, rename it before continuing.
+5. If the runtime exposes neither naming nor rename control, try another supported spawn interface. If none exists, return `BLOCKED` rather than accepting an unrelated auto-generated nickname or claiming the agent was named correctly.
+
 ## Partition before spawning
 
 Build a small dependency map. Run subtasks concurrently only when they do not depend on one another and cannot overwrite the same state. Sequence dependent work. When agents share a filesystem, assign non-overlapping files or use isolated workspaces when parallel edits could collide.
@@ -57,20 +69,21 @@ Prefer the fewest agents that expose real concurrency. Do not split one coherent
 Every spawn prompt must specify:
 
 1. real-world expert persona and task-relevant principles;
-2. role and objective;
-3. exact scope and explicit exclusions;
-4. source files, paths, commands, or facts to inspect;
-5. constraints and decisions already made;
-6. expected deliverable and report format;
-7. verification required before reporting done;
-8. whether edits are authorized and which files the agent owns;
-9. escalation conditions for ambiguity, blockers, or scope changes.
+2. persona-derived runtime name, passed through the spawn tool's naming field;
+3. role and objective;
+4. exact scope and explicit exclusions;
+5. source files, paths, commands, or facts to inspect;
+6. constraints and decisions already made;
+7. expected deliverable and report format;
+8. verification required before reporting done;
+9. whether edits are authorized and which files the agent owns;
+10. escalation conditions for ambiguity, blockers, or scope changes.
 
 Pass the minimum sufficient context. Prefer paths to large artifacts over pasted content. Do not leak the expected conclusion into independent research or review prompts. See [task-contracts.md](references/task-contracts.md) for templates.
 
 ## Spawn and coordinate
 
-- Give each sub-agent a unique, descriptive task name.
+- Give each sub-agent a unique persona-derived runtime name through the spawn tool's explicit naming field, then verify the returned visible name.
 - Give each sub-agent the minimum sufficient context: no history for self-contained work, relevant recent context for local dependencies, and full history only when genuinely necessary and supported by the runtime.
 - Spawn independent subtasks together, within the available concurrency limit.
 - Continue useful parent work while agents run.

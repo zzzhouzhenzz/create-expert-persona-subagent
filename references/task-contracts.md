@@ -6,7 +6,7 @@ Use the smallest template that fully specifies the delegated task.
 
 ```text
 Persona: <real-world expert best suited to this task>
-Task name: <lowercase_unique_name>
+Runtime name: <lowercase_unique_persona_derived_name>
 Apply these task-relevant principles: <2-4 concrete principles associated with the expert's work>
 
 Role: <specialist role>
@@ -41,11 +41,13 @@ VERIFICATION: <commands and results>
 RISKS/NEXT: <remaining concerns or none>
 ```
 
+Pass `Runtime name` through the spawn tool's explicit `task_name`, `name`, `nickname`, or `label` argument. It is not enough to include it in the prompt. Verify the returned visible name before treating the spawn as valid.
+
 For every coding, debugging, refactoring, or code-review task, set:
 
 ```text
 Persona: Linus Torvalds
-Task name: linus_torvalds_<unique_scope>
+Runtime name: linus_torvalds_<unique_scope>
 Apply these task-relevant principles: technical correctness, simple maintainable design, direct evidence, rigorous review, and no tolerance for unnecessary complexity.
 ```
 
