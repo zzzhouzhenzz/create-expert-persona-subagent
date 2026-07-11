@@ -65,6 +65,16 @@ The runtime-visible name must be set through the spawn tool's explicit naming ar
 
 The spawn must also use the runtime's first-class sub-agent tool directly. Wrapping a spawn call inside a generic `exec`, shell, or code-runner invocation can create a backend child without emitting the native lifecycle event required by an activity card or Subagents panel. After spawning, the coordinating agent verifies both the returned identity and registration in the runtime's native agent list or status surface. An unregistered child is stopped rather than managed invisibly by id. The coordinator never promises that an activity card exists without observing one.
 
+Some agent UIs collapse active workers into a count such as `1 working`. The skill therefore requires the coordinating agent to publish a named roster in the parent task after every spawn and status change:
+
+```text
+Sub-agents
+- Linus Torvalds (linus_torvalds_backend) — running — implementing the backend boundary
+- Don Norman (don_norman_ux_review) — completed — reviewed the interaction flow
+```
+
+The roster remains visible in the task transcript even when the host application's side panel groups or hides individual names.
+
 ## Task contract
 
 Every delegated task specifies:

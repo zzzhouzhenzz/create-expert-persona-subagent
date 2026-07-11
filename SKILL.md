@@ -94,12 +94,22 @@ Pass the minimum sufficient context. Prefer paths to large artifacts over pasted
 ## Spawn and coordinate
 
 - Call the native sub-agent tool directly, give the agent a unique persona-derived runtime name through its explicit naming field, then verify both the returned name and native activity registration.
+- Immediately publish a compact named roster in the parent task after every spawn. List every active sub-agent as `Persona (runtime_name) — status — current task`. Do not rely on a panel summary such as `1 working` to tell the user who is running.
 - Give each sub-agent the minimum sufficient context: no history for self-contained work, relevant recent context for local dependencies, and full history only when genuinely necessary and supported by the runtime.
 - Spawn independent subtasks together, within the available concurrency limit.
 - Continue useful parent work while agents run.
 - Check progress through the runtime's native agent list/status control. Use a blocking wait only when the result is required for the next critical-path action; do not poll repeatedly.
+- Refresh the named roster when an agent changes state, completes, errors, blocks, or is stopped. Keep completed agents in the final roster so the user can see the full delegation history.
 - Use the runtime's messaging or follow-up controls for new context, and interrupt only when the current direction is invalid or unsafe.
 - If an agent returns `NEEDS_CONTEXT`, supply the missing facts. If `BLOCKED`, change the task, dependency, scope, or approach before retrying.
+
+Use this user-facing shape:
+
+```text
+Sub-agents
+- Linus Torvalds (linus_torvalds_backend) — running — implementing the backend boundary
+- Don Norman (don_norman_ux_review) — completed — reviewed the interaction flow
+```
 
 ## Integrate through evidence
 
