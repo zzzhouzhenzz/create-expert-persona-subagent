@@ -58,6 +58,16 @@ Before spawning:
 4. If it does not match and the runtime supports renaming, rename it before continuing.
 5. If the runtime exposes neither naming nor rename control, try another supported spawn interface. If none exists, return `BLOCKED` rather than accepting an unrelated auto-generated nickname or claiming the agent was named correctly.
 
+### Use the runtime's native visible spawn path
+
+Invoke the runtime's first-class sub-agent or delegation tool directly so it emits the native lifecycle event used by agent lists, activity cards, and status panels.
+
+- Do not hide a spawn call inside a generic code runner, shell/exec wrapper, or nested orchestration call merely because the underlying function is reachable there. A returned agent id is not proof that the UI registered the sub-agent.
+- Use a wrapped invocation only when the runtime explicitly documents that it preserves native sub-agent lifecycle events and UI registration.
+- Immediately after spawning, confirm the agent appears in the runtime's native agent list, activity panel, or status API. Record its id and verified visible name.
+- If the runtime has no visual agent surface, say so. Never invent an activity-card location or promise that a card exists without observing it.
+- If a direct spawn succeeds but registration is missing, manage the child by id, report the visibility limitation, and use a direct visible spawn for future work. Restart an invisible child only when duplicate execution is safe and the original child has been stopped or completed.
+
 ## Partition before spawning
 
 Build a small dependency map. Run subtasks concurrently only when they do not depend on one another and cannot overwrite the same state. Sequence dependent work. When agents share a filesystem, assign non-overlapping files or use isolated workspaces when parallel edits could collide.
@@ -83,10 +93,11 @@ Pass the minimum sufficient context. Prefer paths to large artifacts over pasted
 
 ## Spawn and coordinate
 
-- Give each sub-agent a unique persona-derived runtime name through the spawn tool's explicit naming field, then verify the returned visible name.
+- Call the native sub-agent tool directly, give the agent a unique persona-derived runtime name through its explicit naming field, then verify both the returned name and native activity registration.
 - Give each sub-agent the minimum sufficient context: no history for self-contained work, relevant recent context for local dependencies, and full history only when genuinely necessary and supported by the runtime.
 - Spawn independent subtasks together, within the available concurrency limit.
 - Continue useful parent work while agents run.
+- Check progress through the runtime's native agent list/status control. Use a blocking wait only when the result is required for the next critical-path action; do not poll repeatedly.
 - Use the runtime's messaging or follow-up controls for new context, and interrupt only when the current direction is invalid or unsafe.
 - If an agent returns `NEEDS_CONTEXT`, supply the missing facts. If `BLOCKED`, change the task, dependency, scope, or approach before retrying.
 
