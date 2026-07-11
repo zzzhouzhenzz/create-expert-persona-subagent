@@ -54,8 +54,8 @@ Before spawning:
 
 1. Inspect the spawn interface for an explicit naming field such as `task_name`, `name`, `nickname`, or `label`.
 2. Set that field in the tool call to the persona-derived machine-safe name. Do not put the name only in the message.
-3. After spawning, inspect the returned name, nickname, label, or canonical task path and verify that it matches the requested persona-derived name.
-4. If it does not match and the runtime supports renaming, rename it before continuing.
+3. After spawning, verify both identity layers: the returned canonical task name/path must match the requested machine-safe name, and every UI-visible nickname or label must identify the selected persona. A correct canonical path does not excuse an unrelated visible nickname.
+4. If any visible nickname or label does not identify the persona and the runtime supports renaming, rename it before continuing. Otherwise stop the child and return `BLOCKED`.
 5. If the runtime exposes neither naming nor rename control, try another supported spawn interface. If none exists, return `BLOCKED` rather than accepting an unrelated auto-generated nickname or claiming the agent was named correctly.
 
 ### Use the runtime's native visible spawn path
@@ -66,7 +66,7 @@ Invoke the runtime's first-class sub-agent or delegation tool directly so it emi
 - Use a wrapped invocation only when the runtime explicitly documents that it preserves native sub-agent lifecycle events and UI registration.
 - Immediately after spawning, confirm the agent appears in the runtime's native agent list, activity panel, or status API. Record its id and verified visible name.
 - If the runtime has no visual agent surface, say so. Never invent an activity-card location or promise that a card exists without observing it.
-- If a direct spawn succeeds but registration is missing, manage the child by id, report the visibility limitation, and use a direct visible spawn for future work. Restart an invisible child only when duplicate execution is safe and the original child has been stopped or completed.
+- If a direct spawn succeeds but native registration is missing, stop or close the child immediately when possible and return `BLOCKED`. Do not continue invisible work by id. Retry only through a path that emits native registration, and only after the original child has stopped.
 
 ## Partition before spawning
 

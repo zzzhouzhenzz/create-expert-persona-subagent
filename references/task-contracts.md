@@ -41,7 +41,7 @@ VERIFICATION: <commands and results>
 RISKS/NEXT: <remaining concerns or none>
 ```
 
-Pass `Runtime name` through the spawn tool's explicit `task_name`, `name`, `nickname`, or `label` argument. It is not enough to include it in the prompt. Verify the returned visible name before treating the spawn as valid.
+Pass `Runtime name` through the spawn tool's explicit `task_name`, `name`, `nickname`, or `label` argument. It is not enough to include it in the prompt. Verify both the canonical task name/path and every UI-visible nickname or label before treating the spawn as valid; a matching path does not excuse an unrelated visible nickname.
 
 For every coding, debugging, refactoring, or code-review task, set:
 

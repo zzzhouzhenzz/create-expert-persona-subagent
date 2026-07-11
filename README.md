@@ -61,9 +61,9 @@ linus_torvalds_tests
 don_norman_ux_review
 ```
 
-The runtime-visible name must be set through the spawn tool's explicit naming argument, such as `task_name`, `name`, `nickname`, or `label`. Putting the desired name only inside the prompt does not control an auto-generated UI nickname. The coordinating agent verifies the returned visible name and must not accept an unrelated nickname.
+The runtime-visible name must be set through the spawn tool's explicit naming argument, such as `task_name`, `name`, `nickname`, or `label`. Putting the desired name only inside the prompt does not control an auto-generated UI nickname. The coordinating agent verifies both the canonical task name/path and every UI-visible nickname or label; a correct path does not excuse an unrelated nickname.
 
-The spawn must also use the runtime's first-class sub-agent tool directly. Wrapping a spawn call inside a generic `exec`, shell, or code-runner invocation can create a backend child without emitting the native lifecycle event required by an activity card or Subagents panel. After spawning, the coordinating agent verifies both the returned identity and registration in the runtime's native agent list or status surface. It never promises that an activity card exists without observing one.
+The spawn must also use the runtime's first-class sub-agent tool directly. Wrapping a spawn call inside a generic `exec`, shell, or code-runner invocation can create a backend child without emitting the native lifecycle event required by an activity card or Subagents panel. After spawning, the coordinating agent verifies both the returned identity and registration in the runtime's native agent list or status surface. An unregistered child is stopped rather than managed invisibly by id. The coordinator never promises that an activity card exists without observing one.
 
 ## Task contract
 
